@@ -9,7 +9,7 @@ import flatTo2d from './flatTo2d';
 
 const colors = new Colors();
 
-export const drawSnyderSquares = (stage, renderer) => {
+export const getSnyderSquare = (renderer) => {
     const squareSize: Size = {width: 150, height: 150};
     const squarePos: Position = getCenter(squareSize, renderer.screen);
     const square: Rect = {
@@ -77,5 +77,6 @@ export const drawSnyderSquares = (stage, renderer) => {
     sprites.forEach(numeral =>
         squareContainer.addChild(numeral));
 
-    stage.addChild(squareContainer);
+    // stage.addChild(squareContainer);
+    return squareContainer;
 };
