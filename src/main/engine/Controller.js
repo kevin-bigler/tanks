@@ -9,9 +9,9 @@ export default class Controller {
      * @param {KeyMap} keyMap Defines each key name to key code
      * @param {[KeyName]} [keys] Key names. Defaults to all keys
      * @param {boolean} [enableCursor]
-     * @param {KeySource} keySource Provides the actual key events (system or recorded or w/e)
+     * @param {KeyEmitter} keyEmitter Provides the actual key events (system or recorded or w/e)
      */
-    constructor({keyMap, keys = allKeys, enableCursor = true, keySource}) {
+    constructor({keyMap, keys = allKeys, enableCursor = true, keyEmitter}) {
         this.keyMap = keyMap;
         this.keys = keys;
         this.enableCursor = enableCursor;
