@@ -3,6 +3,7 @@ export default class Colors {
     grass = 0x4f9c03;
     white = 0xffffff;
     black = 0x000000;
+    blue = 0x0565ff;
 
     fillColor = this.lightGreen;
     clearColor = this.white;

@@ -22,8 +22,7 @@ export const getRectSprite = (opts: Rect & {texture: PIXI.Texture} =
     return sprite;
 };
 
-export const getRectGraphics = (opts: Rect & {border: Border, color: Color} =
-                                    {position: getOrigin(), border: getDefaultBorder()}): PIXI.Graphics => {
+export const getRectGraphics = (opts: RectOpts = getDefaultOpts()): PIXI.Graphics => {
     const graphics = new PIXI.Graphics();
 
     graphics.lineStyle(opts.border.width, opts.border.color);
@@ -32,3 +31,13 @@ export const getRectGraphics = (opts: Rect & {border: Border, color: Color} =
 
     return graphics;
 };
+
+export type RectOpts = Rect & {
+    border: Border,
+    color: Color
+};
+
+const getDefaultOpts = () => ({
+    position: getOrigin(),
+    border: getDefaultBorder(),
+});
