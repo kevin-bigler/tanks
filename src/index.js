@@ -5,6 +5,7 @@ import Colors from './main/snyder-square/Colors';
 import type {Rect, Size} from './main/snyder-square/types';
 import {getTank} from './main/getTank';
 import {KeyEmitter} from './main/KeyEmitter';
+import TankController from './main/TankController';
 // import {getSnyderSquare} from './main/snyder-square/getSnyderSquare';
 
 const colors = new Colors();
@@ -21,6 +22,12 @@ const stage = new PIXI.Container();
 // TODO: get tank, add it to stage
 stage.addChild(getTank(renderer));
 
+const tankController = new TankController();
 const keyEmitter = new KeyEmitter();
+keyEmitter.sub((key, action, event) => {
+        console.log('key action', {key, action, event});
+        tankController.onKeyEvent(key, action, event);
+});
+
 
 renderer.render(stage);
