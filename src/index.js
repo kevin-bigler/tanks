@@ -3,10 +3,10 @@
 import initRenderer from './main/snyder-square/initRenderer';
 import Colors from './main/snyder-square/Colors';
 import type {Rect, Size} from './main/snyder-square/types';
-import {getTank} from './main/getTank';
+import {getTankUI} from './main/getTank';
 import {KeyEmitter} from './main/KeyEmitter';
 import TankController from './main/TankController';
-// import {getSnyderSquare} from './main/snyder-square/getSnyderSquare';
+import Tank from './main/Tank';
 
 const colors = new Colors();
 
@@ -18,16 +18,36 @@ const renderer = initRenderer({size: stageSize, bgColor: stageColor});
 // create the root of the scene graph: `stage`
 const stage = new PIXI.Container();
 
-// stage.addChild(getSnyderSquare(renderer));
-// TODO: get tank, add it to stage
-stage.addChild(getTank(renderer));
+const tankUI = getTankUI(renderer);
+const tank = new Tank(tankUI);
+const tankController = new TankController(tank);
 
-const tankController = new TankController();
+stage.addChild(tank.ui);
+
 const keyEmitter = new KeyEmitter();
 keyEmitter.sub((key, action, event) => {
-        console.log('key action', {key, action, event});
-        tankController.onKeyEvent(key, action, event);
+    console.log('key action', {key, action, event});
+    tankController.onKeyEvent(key, action, event);
 });
+
+// TODO: start game loop
+const fps = 60;
+const frameTime = 1 / 60;
+console.log('frameTime:', frameTime);
+
+let lastTime;
+const run = (timeMillis) => {
+    const dt = lastTime
+        ? timeMillis - lastTime
+        : 0;
+
+    const iters = Math.floor(dt / frameTime);
+    Array(iters).fill().forEach(() => {
+        // TODO: process a frame here
+    });
+
+    requestAnimationFrame(run);
+};
 
 
 renderer.render(stage);

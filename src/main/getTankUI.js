@@ -23,7 +23,7 @@ const baseOpts: RectOpts = {
     color: colors.white
 };
 
-export const getTank = (renderer) => {
+export const getTankUI = (renderer) => {
     const container = new PIXI.Container();
     container.x = baseOpts.position.x;
     container.y = baseOpts.position.y;
