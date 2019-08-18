@@ -7,7 +7,7 @@ import {getTankUI} from './main/getTankUI';
 import {KeyEmitter} from './main/KeyEmitter';
 import TankController from './main/TankController';
 import Tank from './main/Tank';
-import {run} from './main/GameLoop';
+import GameLoop from './main/GameLoop';
 
 const colors = new Colors();
 
@@ -33,7 +33,8 @@ keyEmitter.sub((key, action, event) => {
 
 // TODO: start game loop
 console.log('starting game loop');
-requestAnimationFrame(run);
+const gameLoop = new GameLoop();
+gameLoop.start();
 
 // TODO: move drawing to the game loop (how? inject?)
 renderer.render(stage);
