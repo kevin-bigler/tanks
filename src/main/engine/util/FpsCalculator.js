@@ -22,10 +22,12 @@ export default class FpsCalculator {
         if (!this.lastCalcTime) {
             this.lastCalcTime = timeMillis;
         }
+        // re-calculate every 1 second (1000.0 millis)
         if (timeMillis > this.lastCalcTime + 1000.0) {
             const dtSec = (timeMillis - this.lastCalcTime) / 1000.0;
-            this.actualFps = Math.round(frames / dtSec);
+            this.actualFps = Math.round(this.frames / dtSec);
             // console.log('fps: ', actualFps);
+            // console.log('recalculating fps:', JSON.stringify({actualFps: this.actualFps, frames: this.frames, dtSec, timeMillis, lastCalcTime: this.lastCalcTime}, null, 2));
             this.frames = 0;
             this.lastCalcTime = timeMillis;
         }

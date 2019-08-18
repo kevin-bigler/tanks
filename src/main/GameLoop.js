@@ -16,7 +16,7 @@ export default class GameLoop {
     - fps calculator, input handler (KeyEmitter), etc -- all run BEFORE drawing the state
 */
 
-const limit = 1000;
+const limit = 300;
 let i = 0;
 
 let lastTime;
@@ -26,11 +26,10 @@ export const run = (timeMillis) => {
         console.log('force stopped game loop');
         return;
     }
-    dt += lastTime
-        ? timeMillis - lastTime
-        : 0;
+    const thisDt = lastTime ? timeMillis - lastTime : 0;
 
-    console.log('dt before: ' + dt);
+    dt += thisDt;
+
     if (dt > maxDt) {
         dt = maxDt;
     }
@@ -41,6 +40,7 @@ export const run = (timeMillis) => {
         processFrame(frameTime, timeMillis);
     }, numIterations);
     dt -= frameTime * numIterations;
+    console.log('ending dt: ', dt);
     // TODO: draw here
 
     lastTime = timeMillis;
