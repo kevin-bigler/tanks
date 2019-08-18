@@ -1,26 +1,34 @@
 import * as R from 'ramda';
-import FpsCalculator from './engine/util/FpsCalculator';
-import writeFps from './engine/writeFps';
 
 // for developing/debugging only
-const limit = 300;
+// const limit = 300;
 let i = 0;
+const limit = undefined;
 
+/**
+ * Has subscribers for each frame processed,
+ * and subscribers for each draw cycle (occurs after processing frames)
+ *
+ * start(), stop()
+ * add/remove frame processor
+ * add/remove drawer (thing that *draws*)
+ */
 export default class GameLoop {
     running = false;
+    frameProcessors = new Set();
+    drawers = new Set();
 
     constructor({fps = 60} = {fps: 60}) {
         this.fps = fps;
         const frameTime = (1 / fps) * 1000; // in millis now
         this.frameTime = frameTime;
         const maxDt = frameTime * 4;
-        this.fpsCalc = new FpsCalculator();
 
         let lastTime;
         let dt = 0;
         const run = (timeMillis) => {
-            if (++i > limit) {
-                console.log('force stopped game loop');
+            if (limit && ++i > limit) {
+                console.log('force stopped game loop, iteration limit reached (' + limit + ')');
                 return;
             }
             if (!this.running) {
@@ -40,7 +48,7 @@ export default class GameLoop {
                 this.processFrame(frameTime, timeMillis);
             }, numIterations);
             dt -= frameTime * numIterations;
-            // TODO: draw here
+            this.drawFrame(frameTime, timeMillis);
 
             lastTime = timeMillis;
             this.enqueue();
@@ -61,18 +69,41 @@ export default class GameLoop {
         this.running = false;
     }
 
-    processFrame(dt, timeMillis) {
-        // TODO: invoke all frame subs here
-        const actualFps = this.fpsCalc.recalculateFps(timeMillis);
-        writeFps(actualFps);
+    addFrameProcessor(fn) {
+        this.frameProcessors.add(fn);
     }
 
-    drawFrame() {
-        // TODO: invoke all draw subs here, in order of priority level (z-order)
+    removeFrameProcessor(fn) {
+        this.frameProcessors.delete(fn);
+    }
+
+    addDrawer(fn) {
+        this.drawers.add(fn);
+    }
+
+    removeDrawer(fn) {
+        this.drawers.delete(fn);
+    }
+
+    processFrame(dt, timeMillis) {
+        this.frameProcessors.forEach(fn => {
+            try {
+                fn(dt, timeMillis);
+            } catch (err) {
+                console.warn(err);
+            }
+        });
+    }
+
+    // TODO: can we just remove the params here? don't think drawing needs them ever
+    drawFrame(dt, timeMillis) {
+        // TODO: change to invoke in order of priority level (z-order)
+        this.drawers.forEach(fn => {
+            try {
+                fn(dt, timeMillis);
+            } catch (err) {
+                console.warn(err);
+            }
+        });
     }
 }
-
-
-/* TODO: create loop subscribers interface, ie call all subs in each processed frame (w/ dt & current time)
-    - fps calculator, input handler (KeyEmitter), etc -- all run BEFORE drawing the state
-*/

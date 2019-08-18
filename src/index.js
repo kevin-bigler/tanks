@@ -8,6 +8,8 @@ import {KeyEmitter} from './main/KeyEmitter';
 import TankController from './main/TankController';
 import Tank from './main/Tank';
 import GameLoop from './main/GameLoop';
+import writeFps from './main/engine/writeFps';
+import FpsCalculator from './main/engine/util/FpsCalculator';
 
 const colors = new Colors();
 
@@ -31,10 +33,29 @@ keyEmitter.sub((key, action, event) => {
     tankController.onKeyEvent(key, action, event);
 });
 
-// TODO: start game loop
 console.log('starting game loop');
 const gameLoop = new GameLoop();
-gameLoop.start();
 
-// TODO: move drawing to the game loop (how? inject?)
-renderer.render(stage);
+// add frame subs
+const fpsCalc = new FpsCalculator();
+const processFps = (dt, timeMillis) => {
+    fpsCalc.recalculateFps(timeMillis);
+};
+
+gameLoop.addFrameProcessor(processFps);
+// gameLoop.addFrameProcessor((dt, timeMillis) => console.table({dt, timeMillis}));
+gameLoop.addFrameProcessor((dt, timeMillis) => {
+    tankController.flush();
+    tank.update(dt);
+});
+
+// add draw subs
+gameLoop.addDrawer(() => {
+    renderer.render(stage);
+});
+
+gameLoop.addDrawer(() => {
+    writeFps(fpsCalc.actualFps);
+});
+
+gameLoop.start();

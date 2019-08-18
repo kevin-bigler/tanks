@@ -1,8 +1,12 @@
+import Tank from './Tank';
+
 const velocity = 2;
 
 type Action =
     'MOVE_UP' |
     'MOVE_DOWN' |
+    'MOVE_LEFT' |
+    'MOVE_RIGHT' |
     'ROTATE_LEFT' |
     'ROTATE_RIGHT';
 
@@ -16,6 +20,7 @@ export default class TankController {
      * @type {[Event]}
      */
     queue = [];
+    tank: Tank;
 
     constructor(tank) {
         this.tank = tank;
@@ -50,20 +55,20 @@ export default class TankController {
                 keydown: () => self.start('MOVE_DOWN'),
                 keyup: () => self.stop('MOVE_DOWN')
             },
-            // a: {
-            //     keydown: () => self.velocities.x = -10,
-            //     keyup: () => self.velocities.x = 0
-            // },
-            // d: {
-            //     keydown: () => self.velocities.x = 10,
-            //     keyup: () => self.velocities.x = 0
-            // }
+            a: {
+                keydown: () => self.start('MOVE_LEFT'),
+                keyup: () => self.stop('MOVE_LEFT')
+            },
+            d: {
+                keydown: () => self.start('MOVE_RIGHT'),
+                keyup: () => self.stop('MOVE_RIGHT')
+            }
         };
 
         if (what[key]) {
             console.log('key action', {key, action, event});
             what[key][action](event);
-            console.log('velocities now: ' + JSON.stringify({velocities: this.velocities}));
+            console.log('velocities now: ' + JSON.stringify({velocities: this.tank.velocities}));
         }
     }
 
@@ -71,7 +76,8 @@ export default class TankController {
      * process events in the {@link queue}
      */
     flush() {
-        // TODO, do stuff to the tank
+        // TODO switch this to command pattern (MOVE_UP start/stop, MOVE_DOWN start/stop etc are all commands -- can be defined with names like MOVE_UP start/stop though)
+        // TODO: inject commands (command definitions). each command takes `tank` input (?). so TankCommand, or EntityCommand since anything can move up/down etc
         this.queue.forEach(event => {
             switch (event.action) {
                 case 'MOVE_UP':
@@ -86,6 +92,20 @@ export default class TankController {
                         this.tank.velocities.y = velocity;
                     } else {
                         this.tank.velocities.y = 0;
+                    }
+                    break;
+                case 'MOVE_LEFT':
+                    if (event.on) {
+                        this.tank.velocities.x = -velocity;
+                    } else {
+                        this.tank.velocities.x = 0;
+                    }
+                    break;
+                case 'MOVE_RIGHT':
+                    if (event.on) {
+                        this.tank.velocities.x = velocity;
+                    } else {
+                        this.tank.velocities.x = 0;
                     }
                     break;
             }
