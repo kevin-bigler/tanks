@@ -15,6 +15,7 @@ export default class Tank {
      * @param dt delta time in milliseconds, since last update
      */
     update(dt) {
+        // console.log('tank velocities yo:', JSON.stringify(this.velocities));
         this.ui.x += this.velocities.x;
         this.ui.y += this.velocities.y;
     }

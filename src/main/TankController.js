@@ -42,33 +42,31 @@ export default class TankController {
         this.queue.push({action, on: false});
     }
 
-    onKeyEvent(key, action, event) {
+    onKeyEvent({key, action, event, pressed}) {
         const self = this;
 
         // TODO: rename this. possibly reorganize this somehow/somewhere
         const what = {
             w: {
                 keydown: () => self.start('MOVE_UP'),
-                keyup: () => self.stop('MOVE_UP')
+                keyup: () => self.stop('MOVE_UP') && self.start('MOVE_DOWN')
             },
             s: {
                 keydown: () => self.start('MOVE_DOWN'),
-                keyup: () => self.stop('MOVE_DOWN')
+                keyup: () => self.stop('MOVE_DOWN') && pressed.has('w') && self.start('MOVE_UP')
             },
             a: {
                 keydown: () => self.start('MOVE_LEFT'),
-                keyup: () => self.stop('MOVE_LEFT')
+                keyup: () => self.stop('MOVE_LEFT') && pressed.has('d') && self.start('MOVE_RIGHT')
             },
             d: {
                 keydown: () => self.start('MOVE_RIGHT'),
-                keyup: () => self.stop('MOVE_RIGHT')
+                keyup: () => self.stop('MOVE_RIGHT') && pressed.has('a') && self.start('MOVE_LEFT')
             }
         };
 
         if (what[key]) {
-            console.log('key action', {key, action, event});
             what[key][action](event);
-            console.log('velocities now: ' + JSON.stringify({velocities: this.tank.velocities}));
         }
     }
 

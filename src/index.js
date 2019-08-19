@@ -28,9 +28,11 @@ const tankController = new TankController(tank);
 stage.addChild(tank.ui);
 
 const keyEmitter = new KeyEmitter();
-keyEmitter.sub((key, action, event) => {
-    console.log('key action', {key, action, event});
-    tankController.onKeyEvent(key, action, event);
+keyEmitter.sub(({key, action, event, pressed}) => {
+    console.log('key action', {key, action, event, pressed});
+});
+keyEmitter.sub(({key, action, event, pressed}) => {
+    tankController.onKeyEvent({key, action, event, pressed});
 });
 
 console.log('starting game loop');
