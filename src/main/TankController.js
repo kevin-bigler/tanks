@@ -1,5 +1,5 @@
 import Tank from './Tank';
-
+import {TankActions} from './TankActions';
 const velocity = 2;
 
 type Action =
@@ -15,9 +15,23 @@ type Event = {
     on: boolean
 };
 
+const keyMap = {
+    MOVE_UP: ['w', 'up'],
+    MOVE_DOWN: ['s', 'down']
+};
+
+// could use keyPress to get duration, in case action changes after n time holding a key
+const getActions = (key, keyPress) => {
+    const actions = R.pipe(
+        R.filter(keys => keys.has(key)),
+        R.keys,
+    )(keyMap);
+    return actions;
+};
+
 export default class TankController {
     /**
-     * @type {[Event]}
+     * @type {[TankActions]}
      */
     queue = [];
     tank: Tank;
@@ -26,48 +40,27 @@ export default class TankController {
         this.tank = tank;
     }
 
-    /**
-     * start an action
-     * @param {Action} action
-     */
-    start(action) {
-        this.queue.push({action, on: true});
+    enqueue(command) {
+        this.queue.push(command);
     }
 
     /**
-     * stop an action
-     * @param {Action} action
+     *
+     * @param {Map<String,{duration: number, startTime: number}>} keysPressed
+     * @param {Position} pointerPosition
+     * @param {{primaryPressed: boolean, secondaryPressed: boolean}} pointerState
      */
-    stop(action) {
-        this.queue.push({action, on: false});
-    }
-
-    onKeyEvent({key, action, event, pressed}) {
-        const self = this;
-
-        // TODO: rename this. possibly reorganize this somehow/somewhere
-        const what = {
-            w: {
-                keydown: () => self.start('MOVE_UP'),
-                keyup: () => self.stop('MOVE_UP') && self.start('MOVE_DOWN')
-            },
-            s: {
-                keydown: () => self.start('MOVE_DOWN'),
-                keyup: () => self.stop('MOVE_DOWN') && pressed.has('w') && self.start('MOVE_UP')
-            },
-            a: {
-                keydown: () => self.start('MOVE_LEFT'),
-                keyup: () => self.stop('MOVE_LEFT') && pressed.has('d') && self.start('MOVE_RIGHT')
-            },
-            d: {
-                keydown: () => self.start('MOVE_RIGHT'),
-                keyup: () => self.stop('MOVE_RIGHT') && pressed.has('a') && self.start('MOVE_LEFT')
+    processInput({keysPressed, pointerPosition, pointerState}) {
+        // queue command that corresponds to key+action, passing {key, action, event, pressed}
+        keysPressed.entries().forEach((key, keyPress) => {
+            const actions = getActions(key, keyPress);
+            if (actions.length > 0) {
+                console.log('queueing actions for key [' + key + ']');
+                this.queue.concat(actions);
+            } else {
+                console.log('no actions for key [' + key + ']');
             }
-        };
-
-        if (what[key]) {
-            what[key][action](event);
-        }
+        });
     }
 
     /**
@@ -76,38 +69,11 @@ export default class TankController {
     flush() {
         // TODO switch this to command pattern (MOVE_UP start/stop, MOVE_DOWN start/stop etc are all commands -- can be defined with names like MOVE_UP start/stop though)
         // TODO: inject commands (command definitions). each command takes `tank` input (?). so TankCommand, or EntityCommand since anything can move up/down etc
-        this.queue.forEach(event => {
-            switch (event.action) {
-                case 'MOVE_UP':
-                    if (event.on) {
-                        this.tank.velocities.y = -velocity;
-                    } else {
-                        this.tank.velocities.y = 0;
-                    }
-                    break;
-                case 'MOVE_DOWN':
-                    if (event.on) {
-                        this.tank.velocities.y = velocity;
-                    } else {
-                        this.tank.velocities.y = 0;
-                    }
-                    break;
-                case 'MOVE_LEFT':
-                    if (event.on) {
-                        this.tank.velocities.x = -velocity;
-                    } else {
-                        this.tank.velocities.x = 0;
-                    }
-                    break;
-                case 'MOVE_RIGHT':
-                    if (event.on) {
-                        this.tank.velocities.x = velocity;
-                    } else {
-                        this.tank.velocities.x = 0;
-                    }
-                    break;
-            }
-        })
+        this.queue.forEach(action => {
+            const cmd = TankActions[action];
+            // TODO: whoops, we also need dt here :o -- maybe create TankCommand interface to contain data like dt? plus the run fn
+            cmd(this.tank);
+        });
     }
 
 }
