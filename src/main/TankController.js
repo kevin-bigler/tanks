@@ -1,37 +1,29 @@
 import Tank from './Tank';
-import {TankActions} from './TankActions';
-const velocity = 2;
+import {TankCommands} from './TankCommands';
+import type {TankCommand} from './TankCommands';
+import * as R from 'ramda';
 
-type Action =
-    'MOVE_UP' |
-    'MOVE_DOWN' |
-    'MOVE_LEFT' |
-    'MOVE_RIGHT' |
-    'ROTATE_LEFT' |
-    'ROTATE_RIGHT';
-
-type Event = {
-    action: Action,
-    on: boolean
-};
-
-const keyMap = {
+/**
+ * defines commands' keys
+ * key-value, where key = action name, value = keys that invoke the action
+ * @type {{MOVE_UP: [string, string], MOVE_DOWN: [string, string]}}
+ */
+const keyMap: {[string]: [string]} = {
     MOVE_UP: ['w', 'up'],
     MOVE_DOWN: ['s', 'down']
 };
 
 // could use keyPress to get duration, in case action changes after n time holding a key
 const getActions = (key, keyPress) => {
-    const actions = R.pipe(
+    return R.pipe(
         R.filter(keys => keys.has(key)),
         R.keys,
     )(keyMap);
-    return actions;
 };
 
 export default class TankController {
     /**
-     * @type {[TankActions]}
+     * @type {[TankCommand]}
      */
     queue = [];
     tank: Tank;
@@ -67,10 +59,8 @@ export default class TankController {
      * process events in the {@link queue}
      */
     flush() {
-        // TODO switch this to command pattern (MOVE_UP start/stop, MOVE_DOWN start/stop etc are all commands -- can be defined with names like MOVE_UP start/stop though)
-        // TODO: inject commands (command definitions). each command takes `tank` input (?). so TankCommand, or EntityCommand since anything can move up/down etc
         this.queue.forEach(action => {
-            const cmd = TankActions[action];
+            const cmd = TankCommands[action];
             // TODO: whoops, we also need dt here :o -- maybe create TankCommand interface to contain data like dt? plus the run fn
             cmd(this.tank);
         });

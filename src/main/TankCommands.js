@@ -21,7 +21,7 @@ import Tank from './Tank';
 
 const velocity = 2;
 
-type TankAction = (tank: Tank, dt: number) => void;
+export type TankCommand = (tank: Tank, dt: number) => void;
 
 const moveUp = (tank, dt) => {
     console.log('MOVE_UP');
@@ -35,7 +35,7 @@ const moveDown = (tank, dt) => {
     tank.ui.y += -velocity;
 };
 
-export const TankActions = {
+export const TankCommands: {[string]: TankCommand} = {
     MOVE_UP: moveUp,
     MOVE_DOWN: moveDown
 };
