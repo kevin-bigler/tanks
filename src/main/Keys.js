@@ -1,4 +1,4 @@
-type Keys =
+export type Key =
     'UP' |
     'DOWN' |
     'LEFT' |

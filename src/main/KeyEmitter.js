@@ -36,7 +36,7 @@ export class KeyEmitter {
         });
     }
 
-    _notify(key, action, event) {
+    _notify(key: string, action: KeyAction, event: Object) {
         this.subs.forEach(sub => sub({key, action, event, keyPresses: this.keyPresses}));
     }
 

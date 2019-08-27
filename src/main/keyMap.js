@@ -1,6 +1,7 @@
 import * as R from 'ramda';
+import type {Key} from './Keys';
 
-export const keyMap = {
+export const keyMap: {[string]: Key} = {
     w: 'UP',
     s: 'DOWN',
     a: 'LEFT',
