@@ -1,12 +1,11 @@
 /*
 Tank Actions:
 
-    MOVE_UP (start)
-    MOVE_UP (active? continue)
-    MOVE_UP (stop/cancel)
+    MOVE_UP_START
+    MOVE_UP_STOP
     " for DOWN, LEFT, RIGHT
 
-    AIM at x angle
+    AIM (at x target coords)
 
     ROTATE_LEFT (start)
     ROTATE_LEFT (stop/cancel)
