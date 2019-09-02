@@ -8,4 +8,7 @@ export const keyMap: {[string]: Key} = {
     d: 'RIGHT'
 };
 
-export const keyCodes = name => R.filter(R.equals(name));
+export const keyCodes = name => R.pipe(
+    R.filter(R.equals(name)),
+    R.keys
+);
