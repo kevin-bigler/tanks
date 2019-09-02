@@ -11,6 +11,7 @@ import GameLoop from './main/GameLoop';
 import writeFps from './main/engine/writeFps';
 import FpsCalculator from './main/engine/util/FpsCalculator';
 import {getRectGraphics} from './main/snyder-square/getRect';
+import MouseHandler from './main/MouseHandler';
 
 const colors = new Colors();
 
@@ -24,6 +25,7 @@ const stage = new PIXI.Container();
 
 const bgRect = getRectGraphics({position: {x: 0, y: 0}, size: stageSize, border: {width: 10, color: colors.brown}, color: stageColor});
 stage.addChild(bgRect);
+const mouseHandler = new MouseHandler(bgRect);
 
 const tankUI = getTankUI(renderer);
 const tank = new Tank(tankUI);
