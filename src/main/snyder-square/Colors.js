@@ -4,6 +4,7 @@ export default class Colors {
     white = 0xffffff;
     black = 0x000000;
     blue = 0x0565ff;
+    brown = 0x876707;
 
     fillColor = this.lightGreen;
     clearColor = this.white;

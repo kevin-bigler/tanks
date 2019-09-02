@@ -10,6 +10,7 @@ import Tank from './main/Tank';
 import GameLoop from './main/GameLoop';
 import writeFps from './main/engine/writeFps';
 import FpsCalculator from './main/engine/util/FpsCalculator';
+import {getRectGraphics} from './main/snyder-square/getRect';
 
 const colors = new Colors();
 
@@ -21,6 +22,9 @@ const renderer = initRenderer({size: stageSize, bgColor: stageColor});
 // create the root of the scene graph: `stage`
 const stage = new PIXI.Container();
 
+const bgRect = getRectGraphics({position: {x: 0, y: 0}, size: stageSize, border: {width: 10, color: colors.brown}, color: stageColor});
+stage.addChild(bgRect);
+
 const tankUI = getTankUI(renderer);
 const tank = new Tank(tankUI);
 const tankController = new TankController(tank);
@@ -28,9 +32,10 @@ const tankController = new TankController(tank);
 stage.addChild(tank.ui);
 
 const keyEmitter = new KeyEmitter();
-keyEmitter.sub(({key, action, event, keyPresses}) => {
+const keyLogger = ({key, action, event, keyPresses}) => {
     console.log('key action', {key, action, event, keyPresses});
-});
+};
+// keyEmitter.sub(keyLogger);
 keyEmitter.sub(({key, action, event, keyPresses}) => {
     tankController.onKeyEvent({key, action, event, keyPresses});
 });

@@ -8,9 +8,9 @@ import * as PIXI from 'pixi.js';
  * @param {Size} opts.size
  * @param {Color} opts.bgColor
  */
-const initRenderer = ({size, bgColor}) => {
+const initRenderer = ({size, bgColor = null, transparent = false}) => {
     const {width, height} = size;
-    const renderer = PIXI.autoDetectRenderer(width, height,{backgroundColor: bgColor}); // transparent: true also works
+    const renderer = PIXI.autoDetectRenderer(width, height, {backgroundColor: bgColor}, transparent); // transparent: true also works
     document.getElementById('main').appendChild(renderer.view);
     // document.body.appendChild(renderer.view);
 
