@@ -27,11 +27,17 @@ const bgRect = getRectGraphics({position: {x: 0, y: 0}, size: stageSize, border:
 stage.addChild(bgRect);
 const mouseHandler = new MouseHandler(bgRect);
 
-const tankUI = getTankUI(renderer);
-const tank = new Tank(tankUI);
-const tankController = new TankController(tank);
+export type TankUI = {
+    container: PIXI.Container,
+    base: PIXI.Sprite,
+    gun: PIXI.Sprite
+};
+const tankUI = getTankUI(renderer, mouseHandler);
+console.log('tankUI' + typeof tankUI);
+const tank = new Tank(tankUI, mouseHandler);
+const tankController = new TankController(tank, mouseHandler);
 
-stage.addChild(tank.ui);
+stage.addChild(tank.ui.container);
 
 const keyEmitter = new KeyEmitter();
 const keyLogger = ({key, action, event, keyPresses}) => {

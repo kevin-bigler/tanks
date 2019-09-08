@@ -3,6 +3,7 @@ import type { Position } from './engine/types';
 export default class MouseHandler {
     subject: PIXI.Graphics;
     mousePos: Position;
+    mouseData;
 
     constructor(subject: PIXI.Graphics) {
         this.subject = subject;
@@ -26,12 +27,17 @@ export default class MouseHandler {
             if (mouseIn) {
                 // console.log("mouse move inside", e);
                 this.mousePos = e.data.getLocalPosition(this.subject);
-                console.log('mouse move:', this.mousePos);
+                this.mouseData = e.data;
+                // console.log('mouse move:', this.mousePos);
             }
         });
     }
 
     getMousePos(): Position {
         return this.mousePos;
+    }
+
+    getMouseData() {
+        return this.mouseData;
     }
 };
