@@ -55,14 +55,14 @@ const moveRight = (tank) => {
     // console.log('MOVE_RIGHT');
     // console.log('tank.velocities.x BEFORE=', tank.velocities.x);
     tank.velocities.x = addVelocity(tank.velocities.x, speedX, {min: -speedX, max: speedX});
-    // console.log('tank.velocities.x AFTERR=', tank.velocities.x);
+    console.log('tank.velocities.x AFTERR=', tank.velocities.x);
 };
 
 const moveRightOff = (tank) => {
     // console.log('MOVE_RIGHT');
     // console.log('tank.velocities.x BEFORE=', tank.velocities.x);
     tank.velocities.x = addVelocity(tank.velocities.x, -speedX, {min: -speedX, max: speedX});
-    // console.log('tank.velocities.x AFTERR=', tank.velocities.x);
+    console.log('tank.velocities.x AFTERR=', tank.velocities.x);
 };
 
 export const TankCommands: {[string]: TankCommand} = {

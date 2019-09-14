@@ -55,8 +55,10 @@ const getGun = (renderer, container, mouseHandler) => {
 
     // Draw the line (endPoint should be relative to myGraph's position)
     graphics.lineStyle(thickness, colors.blue)
-        .moveTo(0, 0)
+        .moveTo(baseOpts.size.width / 2, baseOpts.size.height / 2)
         .lineTo(endPoint.x, endPoint.y);
+    graphics.pivot.x = baseOpts.size.width * 1.5;
+    graphics.pivot.y = baseOpts.size.height / 2;
 
     return graphics;
 };
@@ -64,7 +66,7 @@ const getGun = (renderer, container, mouseHandler) => {
 const getGunTip = (startPoint, container, mouseHandler) => {
     // console.log('getGunTip');
     return {
-        x: baseOpts.size.width,
-        y: 0 // baseOpts.size.height / 2
+        x: baseOpts.size.width * 1.5,
+        y: baseOpts.size.height / 2
     };
 };

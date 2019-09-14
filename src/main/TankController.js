@@ -49,7 +49,7 @@ export default class TankController {
      */
     flush() {
         this.queue.forEach(action => {
-            // console.log('flushing action ' + action);
+            console.log('flushing action ' + action);
             const cmd = TankCommands[action];
             if (typeof cmd === 'function') {
                 cmd(this.tank);

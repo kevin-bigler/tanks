@@ -34,7 +34,7 @@ export type TankUI = {
 };
 const tankUI = getTankUI(renderer, mouseHandler);
 console.log('tankUI' + typeof tankUI);
-const tank = new Tank(tankUI, mouseHandler);
+const tank = new Tank(tankUI, mouseHandler, renderer);
 const tankController = new TankController(tank, mouseHandler);
 
 stage.addChild(tank.ui.container);

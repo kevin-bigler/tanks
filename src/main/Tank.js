@@ -13,10 +13,12 @@ export default class Tank {
     };
     mouseHandler: MouseHandler;
     tip: Position;
+    renderer;
 
-    constructor(ui: TankUI, mouseHandler: MouseHandler) {
+    constructor(ui: TankUI, mouseHandler: MouseHandler, renderer) {
         this.ui = ui;
         this.mouseHandler = mouseHandler;
+        this.renderer = renderer;
     }
 
     /**
@@ -33,30 +35,41 @@ export default class Tank {
     }
 
     aimGun() {
-        this.ui.gun.clear();
-
-        const startPoint: Position = {x: this.ui.container.width / 2, y: this.ui.container.height / 2};
-        // Move it to the beginning of the line
-        this.ui.gun.position.set(startPoint.x, startPoint.y);
-
+        // this.ui.gun.clear();
+        //
+        // const startPoint: Position = {x: this.ui.container.width / 2, y: this.ui.container.height / 2};
+        // // Move it to the beginning of the line
+        // this.ui.gun.position.set(startPoint.x, startPoint.y);
+        //
         const targetPoint: Position = this.mouseHandler.getMouseData().getLocalPosition(this.ui.container);
-        const endPoint: Position = this.getGunTip(startPoint, targetPoint);
-        this.tip = endPoint;
-        // console.log('gun endPoint:', endPoint);
-        const thickness = 7;
-
-        // Draw the line (endPoint should be relative to myGraph's position)
-        this.ui.gun.lineStyle(thickness, colors.blue)
-            .moveTo(0, 0)
-            .lineTo(endPoint.x, endPoint.y);
+        // const endPoint: Position = this.getGunTip(startPoint, targetPoint);
+        // this.tip = endPoint;
+        // // console.log('gun endPoint:', endPoint);
+        // const thickness = 7;
+        //
+        // // Draw the line (endPoint should be relative to myGraph's position)
+        // this.ui.gun.lineStyle(thickness, colors.blue)
+        //     .moveTo(0, 0)
+        //     .lineTo(endPoint.x, endPoint.y);
+        this.ui.gun.rotation = getAngle(targetPoint);
     }
 
-    getGunTip(startPoint: Position, targetPoint: Position): Position {
-        // gun length in direction of mouse, starting from startPosition
-        const gunLength = this.ui.container.width;
-        const theta = Math.atan(targetPoint.y / targetPoint.x); // tan(theta) = y / x, so theta = tan^-1 (y / x)
-        const x = gunLength * Math.cos(theta);
-        const y = gunLength * Math.sin(theta);
-        return { x, y };
-    }
+    // getGunTip(startPoint: Position, targetPoint: Position): Position {
+    //     // gun length in direction of mouse, starting from startPosition
+    //     const gunLength = this.ui.container.width;
+    //     // const theta = Math.atan(targetPoint.y / targetPoint.x); // tan(theta) = y / x, so theta = tan^-1 (y / x)
+    //     // const x = gunLength * Math.cos(theta);
+    //     // const y = gunLength * Math.sin(theta);
+    //     // return { x, y };
+    //     return {x: gunLength, y: 0};
+    // }
 }
+
+/**
+ * get angle toward point in radians
+ *
+ * @param targetPoint
+ * @param origin Defaults to actual origin (0, 0)
+ */
+const getAngle = (targetPoint: Position, origin: Position = {x: 0, y: 0}): number =>
+    Math.atan(targetPoint.y / targetPoint.x); // tan(theta) = y / x, so theta = tan^-1 (y / x)
