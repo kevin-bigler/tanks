@@ -1,5 +1,5 @@
 import Tank from './Tank';
-import {TankCommands} from './TankCommands';
+import {getTankCommand} from './TankCommands';
 import type {TankCommand} from './TankCommands';
 import {keyMap} from './keyMap';
 
@@ -45,14 +45,24 @@ export default class TankController {
     }
 
     /**
+     * Triggered when pointer (ie mouse) updates
+     *
+     * @param position New position
+     */
+    onPointerUpdate(position: Position) {
+        // "TARGET (X, Y)"
+        this.enqueue(`TARGET (${position.x}, ${position.y})`);
+    }
+
+    /**
      * process events in the {@link queue}
      */
     flush() {
         this.queue.forEach(action => {
-            console.log('flushing action ' + action);
-            const cmd = TankCommands[action];
+            // console.log('flushing action ' + action);
+            const cmd = getTankCommand(action);
             if (typeof cmd === 'function') {
-                cmd(this.tank);
+                cmd(this.tank, action);
             } else {
                 console.log('command not found for ' + action);
             }

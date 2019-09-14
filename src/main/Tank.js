@@ -1,9 +1,5 @@
-import MouseHandler from './MouseHandler';
 import type {TankUI} from '../index';
 import type {Position} from './engine/types';
-import Colors from './snyder-square/Colors';
-
-const colors = new Colors();
 
 export default class Tank {
     ui: TankUI;
@@ -11,14 +7,11 @@ export default class Tank {
         x: 0,
         y: 0
     };
-    mouseHandler: MouseHandler;
+    target: Position = {x: 0, y: 0}; // relative to WHAT?
     tip: Position;
-    renderer;
 
-    constructor(ui: TankUI, mouseHandler: MouseHandler, renderer) {
+    constructor(ui: TankUI) {
         this.ui = ui;
-        this.mouseHandler = mouseHandler;
-        this.renderer = renderer;
     }
 
     /**
@@ -28,48 +21,35 @@ export default class Tank {
      */
     update(dt) {
         // console.log('tank velocities yo:', JSON.stringify(this.velocities));
-        this.ui.x += (this.velocities.x / 1000) * dt;
-        this.ui.y += (this.velocities.y / 1000) * dt;
-        // TODO: add AIM_GUN to TankController and provide the target point (ie abstract away the mouse)
+        this.ui.container.x += (this.velocities.x / 1000) * dt;
+        this.ui.container.y += (this.velocities.y / 1000) * dt;
         this.aimGun();
     }
 
     aimGun() {
-        // this.ui.gun.clear();
-        //
-        // const startPoint: Position = {x: this.ui.container.width / 2, y: this.ui.container.height / 2};
-        // // Move it to the beginning of the line
-        // this.ui.gun.position.set(startPoint.x, startPoint.y);
-        //
-        const targetPoint: Position = this.mouseHandler.getMouseData().getLocalPosition(this.ui.container);
-        // const endPoint: Position = this.getGunTip(startPoint, targetPoint);
-        // this.tip = endPoint;
-        // // console.log('gun endPoint:', endPoint);
-        // const thickness = 7;
-        //
-        // // Draw the line (endPoint should be relative to myGraph's position)
-        // this.ui.gun.lineStyle(thickness, colors.blue)
-        //     .moveTo(0, 0)
-        //     .lineTo(endPoint.x, endPoint.y);
-        this.ui.gun.rotation = getAngle(targetPoint);
+        this.ui.gun.rotation = getAngle(this.target, this.ui.container.getGlobalPosition());
     }
-
-    // getGunTip(startPoint: Position, targetPoint: Position): Position {
-    //     // gun length in direction of mouse, starting from startPosition
-    //     const gunLength = this.ui.container.width;
-    //     // const theta = Math.atan(targetPoint.y / targetPoint.x); // tan(theta) = y / x, so theta = tan^-1 (y / x)
-    //     // const x = gunLength * Math.cos(theta);
-    //     // const y = gunLength * Math.sin(theta);
-    //     // return { x, y };
-    //     return {x: gunLength, y: 0};
-    // }
 }
 
 /**
  * get angle toward point in radians
  *
- * @param targetPoint
+ * @param target
  * @param origin Defaults to actual origin (0, 0)
  */
-const getAngle = (targetPoint: Position, origin: Position = {x: 0, y: 0}): number =>
-    Math.atan(targetPoint.y / targetPoint.x); // tan(theta) = y / x, so theta = tan^-1 (y / x)
+const getAngle = (target: Position, origin: Position = {x: 0, y: 0}): number => {
+    const adjustedTarget = { x: target.x - origin.x, y: target.y - origin.y};
+    // console.log('aiming from:', origin, 'to:', target, 'effective target:', adjustedTarget);
+    debugPoints(origin, target, adjustedTarget);
+
+    return Math.atan(target.y - origin.y / target.x - origin.x); // tan(theta) = y / x, so theta = tan^-1 (y / x)
+};
+
+const debugPoints = (origin, target, adjustedTarget) => {
+    const xy = (pt: Position) => `(${pt.x}, ${pt.y})`;
+    document.getElementById('debug').innerHTML = [
+        'origin: ' + xy(origin),
+        'target: ' + xy(target),
+        'adjustedTarget: ' + xy(adjustedTarget)
+    ].join('<br />');
+};

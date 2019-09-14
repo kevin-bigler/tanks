@@ -55,23 +55,38 @@ const moveRight = (tank) => {
     // console.log('MOVE_RIGHT');
     // console.log('tank.velocities.x BEFORE=', tank.velocities.x);
     tank.velocities.x = addVelocity(tank.velocities.x, speedX, {min: -speedX, max: speedX});
-    console.log('tank.velocities.x AFTERR=', tank.velocities.x);
+    // console.log('tank.velocities.x AFTERR=', tank.velocities.x);
 };
 
 const moveRightOff = (tank) => {
     // console.log('MOVE_RIGHT');
     // console.log('tank.velocities.x BEFORE=', tank.velocities.x);
     tank.velocities.x = addVelocity(tank.velocities.x, -speedX, {min: -speedX, max: speedX});
-    console.log('tank.velocities.x AFTERR=', tank.velocities.x);
+    // console.log('tank.velocities.x AFTERR=', tank.velocities.x);
 };
 
-export const TankCommands: {[string]: TankCommand} = {
-    MOVE_UP: moveUp,
-    MOVE_UP_OFF: moveUpOff,
-    MOVE_DOWN: moveDown,
-    MOVE_DOWN_OFF: moveDownOff,
-    MOVE_LEFT: moveLeft,
-    MOVE_LEFT_OFF: moveLeftOff,
-    MOVE_RIGHT: moveRight,
-    MOVE_RIGHT_OFF: moveRightOff
+const target = (tank, action) => {
+    // action ~ 'TARGET (X, Y)'
+    const [x, y] = action.match(/\d+[\.\d]*/g);
+    tank.target = {x: parseFloat(x), y: parseFloat(y)};
+};
+
+export const getTankCommand = (name: string): TankCommand => {
+    const map = {
+        MOVE_UP: moveUp,
+        MOVE_UP_OFF: moveUpOff,
+        MOVE_DOWN: moveDown,
+        MOVE_DOWN_OFF: moveDownOff,
+        MOVE_LEFT: moveLeft,
+        MOVE_LEFT_OFF: moveLeftOff,
+        MOVE_RIGHT: moveRight,
+        MOVE_RIGHT_OFF: moveRightOff,
+    };
+    if (map[name]) {
+        return map[name];
+    }
+    if (name.startsWith('TARGET')) {
+        return target;
+    }
+    return undefined;
 };

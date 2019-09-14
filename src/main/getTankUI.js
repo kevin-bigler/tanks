@@ -23,14 +23,14 @@ const baseOpts: RectOpts = {
     color: colors.white
 };
 
-export const getTankUI = (renderer, mouseHandler) => {
+export const getTankUI = (renderer) => {
     const container = new PIXI.Container();
     container.x = baseOpts.position.x;
     container.y = baseOpts.position.y;
     // container.width = baseOpts.size.width;
     // container.height = baseOpts.size.height;
     const base = getBase(renderer);
-    const gun = getGun(renderer, container, mouseHandler);
+    const gun = getGun(renderer, container);
     container.addChild(base);
     container.addChild(gun);
     return {container, base, gun};
@@ -44,9 +44,9 @@ const getBase = (renderer) => {
     return sprite;
 };
 
-const getGun = (renderer, container, mouseHandler) => {
+const getGun = (renderer, container) => {
     const startPoint: Position = {x: container.width / 2, y: container.height / 2};
-    const endPoint: Position = getGunTip(startPoint, container, mouseHandler);
+    const endPoint: Position = getGunTip(startPoint, container);
     const thickness = 7;
 
     let graphics = new PIXI.Graphics();
@@ -63,10 +63,10 @@ const getGun = (renderer, container, mouseHandler) => {
     return graphics;
 };
 
-const getGunTip = (startPoint, container, mouseHandler) => {
+const getGunTip = (startPoint, container) => {
     // console.log('getGunTip');
     return {
-        x: baseOpts.size.width * 1.5,
-        y: baseOpts.size.height / 2
+        x: startPoint.x + baseOpts.size.width * 1.5,
+        y: startPoint.y + baseOpts.size.height / 2
     };
 };

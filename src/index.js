@@ -32,10 +32,12 @@ export type TankUI = {
     base: PIXI.Sprite,
     gun: PIXI.Sprite
 };
-const tankUI = getTankUI(renderer, mouseHandler);
+const tankUI = getTankUI(renderer);
 console.log('tankUI' + typeof tankUI);
 const tank = new Tank(tankUI, mouseHandler, renderer);
-const tankController = new TankController(tank, mouseHandler);
+const tankController = new TankController(tank);
+
+mouseHandler.sub((event, {position}) => tankController.onPointerUpdate(position));
 
 stage.addChild(tank.ui.container);
 
