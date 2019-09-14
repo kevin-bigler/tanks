@@ -23,7 +23,7 @@ const renderer = initRenderer({size: stageSize, bgColor: stageColor});
 // create the root of the scene graph: `stage`
 const stage = new PIXI.Container();
 
-const bgRect = getRectGraphics({position: {x: 0, y: 0}, size: stageSize, border: {width: 10, color: colors.brown}, color: stageColor});
+const bgRect = getRectGraphics({position: {x: 0, y: 0}, size: stageSize, border: {width: 0, color: colors.brown}, color: stageColor});
 stage.addChild(bgRect);
 const mouseHandler = new MouseHandler(bgRect);
 
