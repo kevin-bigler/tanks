@@ -12,6 +12,7 @@ import writeFps from './main/engine/writeFps';
 import FpsCalculator from './main/engine/util/FpsCalculator';
 import {getRectGraphics} from './main/snyder-square/getRect';
 import MouseHandler from './main/MouseHandler';
+import {drawTest} from './main/drawTest';
 
 const colors = new Colors();
 
@@ -27,6 +28,8 @@ const bgRect = getRectGraphics({position: {x: 0, y: 0}, size: stageSize, border:
 stage.addChild(bgRect);
 const mouseHandler = new MouseHandler(bgRect);
 
+stage.addChild(drawTest(renderer, stageSize));
+
 export type TankUI = {
     container: PIXI.Container,
     base: PIXI.Sprite,
@@ -39,7 +42,7 @@ const tankController = new TankController(tank);
 
 mouseHandler.sub((event, {position}) => tankController.onPointerUpdate(position));
 
-stage.addChild(tank.ui.container);
+// stage.addChild(tank.ui.container);
 
 const keyEmitter = new KeyEmitter();
 const keyLogger = ({key, action, event, keyPresses}) => {
