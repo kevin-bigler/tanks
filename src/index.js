@@ -44,7 +44,7 @@ const tankController = new TankController(tank);
 
 mouseHandler.sub((event, {position}) => tankController.onPointerUpdate(position));
 
-// stage.addChild(tank.ui.container);
+stage.addChild(tank.ui.container);
 
 const keyEmitter = new KeyEmitter();
 const keyLogger = ({key, action, event, keyPresses}) => {

@@ -15,13 +15,13 @@ export const drawTest = (renderer, stageSize: Size) => {
     const rect1 = getTestRect(renderer);
     container.addChild(rect1);
 
-    const rect2 = getTestRect(renderer,
-        {
-            size: {width: 50, height: 10},
-            color: colors.blue,
-            position: {x: 25, y: 50}
-        });
-    container.addChild(rect2);
+    // const rect2 = getTestRect(renderer,
+    //     {
+    //         size: {width: 50, height: 10},
+    //         color: colors.blue,
+    //         position: {x: 25, y: 50}
+    //     });
+    // container.addChild(rect2);
 
     const rect3 = getTestRect(renderer,
         {
@@ -39,7 +39,9 @@ export const drawTest = (renderer, stageSize: Size) => {
     container.addChild(rect4);
 
     const line1 = getTestLine(renderer, container, {
-        position: {x: 0, y: 50}
+        position: {x: rect1.width / 2, y: rect1.height / 2},
+        endPoint: {x: rect1.width, y: 0}
+        // startPoint: {x: 30, y: 30}
     });
     container.addChild(line1);
 

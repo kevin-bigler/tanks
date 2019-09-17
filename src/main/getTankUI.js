@@ -9,8 +9,8 @@ const colors = new Colors();
 
 const baseOpts: RectOpts = {
     position: {
-        x: 20,
-        y: 60
+        x: 500,
+        y: 100
     },
     size: {
         width: 50,
@@ -27,12 +27,12 @@ export const getTankUI = (renderer) => {
     const container = new PIXI.Container();
     container.x = baseOpts.position.x;
     container.y = baseOpts.position.y;
-    // container.width = baseOpts.size.width;
-    // container.height = baseOpts.size.height;
+
     const base = getBase(renderer);
     const gun = getGun(renderer, container);
     container.addChild(base);
     container.addChild(gun);
+
     return {container, base, gun};
 };
 
@@ -50,7 +50,7 @@ const getGun = (renderer, container) => {
         y: baseOpts.size.height / 2
     };
     const endPoint: Position = {
-        x: baseOpts.size.width * 1.5,
+        x: baseOpts.size.width,
         y: 0
     };
     const thickness = 7;
@@ -59,16 +59,11 @@ const getGun = (renderer, container) => {
     // Move it to the beginning of the line
     graphics.position.set(startPoint.x, startPoint.y);
     // console.log('startPoint:', startPoint);
-    // graphics.position.set(100, 100);
 
-    // Draw the line (endPoint should be relative to myGraph's position)
+    // Draw the line (endPoint is relative to POSITION)
     graphics.lineStyle(thickness, colors.blue)
-        // .moveTo(startPoint.x, startPoint.y)
-        // .lineTo(endPoint.x, endPoint.y);
         .moveTo(0, 0)
-        .lineTo(200, 200);
-    graphics.pivot.x = baseOpts.size.width * 1.5;
-    graphics.pivot.y = baseOpts.size.height / 2;
+        .lineTo(endPoint.x, endPoint.y);
 
     return graphics;
 };
