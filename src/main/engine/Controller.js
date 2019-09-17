@@ -113,7 +113,7 @@ const allKeys = [
     'SELECT'];
 
 interface KeyMap {
-    getKey(code: string): KeyName
+    getKey(code: string): KeyName,s
     getCode(keyName: KeyName): string
 }
 

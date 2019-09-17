@@ -10,10 +10,14 @@
     "build": "parcel build src/index.html",
     "dev": "parcel src/index.html # starts a dev server",
     "watch": "parcel watch src/index.html # does not start a dev server",
-    "flow": "flow"
+    "flow": "flow",
+    "dev:new": "npm run compile:watch && npm run server:watch",
+    "compile:watch": "babel src -w -o src/index.js",
+    "server:watch": "browser-sync start --server 'src/' --files 'index.html'"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
+    "browser-sync": "^2.26.7",
     "pixi.js": "^4.4.4",
     "ramda": "^0.26.1"
   },

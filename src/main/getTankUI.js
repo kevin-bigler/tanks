@@ -58,7 +58,7 @@ const getGun = (renderer, container) => {
     let graphics = new PIXI.Graphics();
     // Move it to the beginning of the line
     graphics.position.set(startPoint.x, startPoint.y);
-    console.log('startPoint:', startPoint);
+    // console.log('startPoint:', startPoint);
     // graphics.position.set(100, 100);
 
     // Draw the line (endPoint should be relative to myGraph's position)

@@ -16,6 +16,8 @@ import {drawTest} from './main/drawTest';
 
 const colors = new Colors();
 
+console.log('IM A GENIUS');
+
 // TODO: configify these values, laterish
 const stageSize: Size = {width: 800, height: 600};
 const stageColor = colors.grass;
@@ -36,7 +38,7 @@ export type TankUI = {
     gun: PIXI.Sprite
 };
 const tankUI = getTankUI(renderer);
-console.log('tankUI' + typeof tankUI);
+// console.log('tankUI' + typeof tankUI);
 const tank = new Tank(tankUI, mouseHandler, renderer);
 const tankController = new TankController(tank);
 
@@ -53,7 +55,7 @@ keyEmitter.sub(({key, action, event, keyPresses}) => {
     tankController.onKeyEvent({key, action, event, keyPresses});
 });
 
-console.log('starting game loop');
+// console.log('starting game loop');
 const gameLoop = new GameLoop();
 
 // add frame subs
@@ -76,6 +78,10 @@ gameLoop.addDrawer(() => {
 
 gameLoop.addDrawer(() => {
     writeFps(fpsCalc.actualFps);
+});
+
+mouseHandler.sub((event, {position}) => {
+    document.getElementById('mousePos').innerHTML = `Mouse: (${position.x}, ${position.y})`;
 });
 
 gameLoop.start();
