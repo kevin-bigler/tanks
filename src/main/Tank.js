@@ -47,16 +47,24 @@ const getAngle = (target: Position, origin: Position = {x: 0, y: 0}): number => 
         x: target.x - origin.x,
         y: target.y - origin.y
     };
-    debugPoints(origin, target, adjustedTarget);
+    let rotation = Math.atan(adjustedTarget.y / adjustedTarget.x); // tan(theta) = y / x, so theta = tan^-1 (y / x);
 
-    return Math.atan(adjustedTarget.y / adjustedTarget.x); // tan(theta) = y / x, so theta = tan^-1 (y / x)
+    // UI coordinates are weird, so we have to offset the left 2 quadrants by PI
+    if (adjustedTarget.x < 0) {
+        rotation += Math.PI;
+    }
+
+    debugPoints(origin, target, adjustedTarget, rotation);
+
+    return rotation;
 };
 
-const debugPoints = (origin, target, adjustedTarget) => {
+const debugPoints = (origin, target, adjustedTarget, rotation) => {
     const xy = (pt: Position) => `(${pt.x}, ${pt.y})`;
     document.getElementById('debug').innerHTML = [
         'origin: ' + xy(origin),
         'target: ' + xy(target),
-        '<b>adjustedTarget: ' + xy(adjustedTarget) + '</b>'
+        '<b>adjustedTarget: ' + xy(adjustedTarget) + '</b>',
+        'rotation: ' + rotation
     ].join('<br />');
 };
