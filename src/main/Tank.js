@@ -1,5 +1,9 @@
 import type {TankUI} from '../index';
 import type {Position} from './engine/types';
+import {getRect} from './snyder-square/getRect';
+import Colors from './snyder-square/Colors';
+
+const colors = new Colors();
 
 export default class Tank {
     ui: TankUI;
@@ -7,11 +11,14 @@ export default class Tank {
         x: 0,
         y: 0
     };
-    target: Position; // relative to WHAT?
-    // tip: Position;
+    target: Position; // relative to stage, not container
+    renderer;
+    stage;
 
-    constructor(ui: TankUI) {
+    constructor(ui: TankUI, renderer, stage) {
         this.ui = ui;
+        this.renderer = renderer;
+        this.stage = stage;
     }
 
     /**
@@ -20,7 +27,7 @@ export default class Tank {
      * @param dt delta time in milliseconds, since last update
      */
     update(dt) {
-        // console.log('tank velocities yo:', JSON.stringify(this.velocities));
+        // console.log('tank velocities:', JSON.stringify(this.velocities));
         this.ui.container.x += (this.velocities.x / 1000) * dt;
         this.ui.container.y += (this.velocities.y / 1000) * dt;
         this.aimGun();
@@ -28,11 +35,42 @@ export default class Tank {
 
     aimGun() {
         if (this.target) {
-            const {x, y} = this.ui.container.getGlobalPosition();
-            // this.ui.gun.rotation = getAngle(this.target, {x: x - this.ui.gun.x, y: y - this.ui.gun.y});
-            this.ui.gun.rotation = getAngle(this.target, this.ui.gun.getGlobalPosition());
+            this.ui.gun.rotation = this.getCurrentAngle();
         }
         this.ui.gun.rotation += -.01;
+    }
+
+    /**
+     * get angle to where the gun is currently pointing
+     * @return {number}
+     */
+    getCurrentAngle(): number {
+        return getAngle(this.target, this.ui.gun.getGlobalPosition());
+    }
+
+    shoot() {
+        // TODO: use slope based on adjusted target (see getAngle() for reference)
+        // spawn a black 10x10 square, giving it the velocities of that slope, with starting point of the gun tip (?)
+        const {x, y} = this.getGunTip();
+        const position = {x: x + this.ui.gun.getGlobalPosition().x, y: y + this.ui.gun.getGlobalPosition().y};
+        console.log('gun tip: ', {x, y});
+        console.log('position: ', position);
+        const bullet = getRect(this.renderer, {
+            size: {width: 10, height: 10},
+            position,
+            color: colors.black,
+            border: {width: 0, color: colors.black}
+        });
+        this.stage.addChild(bullet);
+    }
+
+    getGunTip(): Position {
+        // gun length in direction of mouse, starting from startPosition
+        const gunLength = this.ui.base.width;
+        const theta = this.getCurrentAngle();
+        const x = gunLength * Math.cos(theta);
+        const y = gunLength * Math.sin(theta);
+        return {x, y};
     }
 }
 

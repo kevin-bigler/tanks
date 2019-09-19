@@ -39,7 +39,7 @@ export type TankUI = {
 };
 const tankUI = getTankUI(renderer);
 // console.log('tankUI' + typeof tankUI);
-const tank = new Tank(tankUI, mouseHandler, renderer);
+const tank = new Tank(tankUI, renderer, stage);
 const tankController = new TankController(tank);
 
 mouseHandler.sub((event, {position}) => tankController.onPointerUpdate(position));
@@ -82,6 +82,13 @@ gameLoop.addDrawer(() => {
 
 mouseHandler.sub((event, {position}) => {
     document.getElementById('mousePos').innerHTML = `Mouse: (${position.x}, ${position.y})`;
+});
+
+mouseHandler.sub((event, {position}) => {
+    if (event === 'mousedown') {
+        console.log('BANG!');
+        tank.shoot();
+    }
 });
 
 gameLoop.start();

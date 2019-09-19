@@ -15,20 +15,20 @@ export default class MouseHandler {
     _init() {
         let mouseIn = false;
         this.subject.interactive = true;
-        this.subject.on("mouseover", (e) => {
-            // console.log("over");
+        this.subject.on('mouseover', (e) => {
+            // console.log('over');
             mouseIn = true;
         });
 
-        this.subject.on("mouseout", (e) => {
-            // console.log("out");
+        this.subject.on('mouseout', (e) => {
+            // console.log('out');
             mouseIn = false;
         });
 
-        this.subject.on("mousemove",(e) => {
+        this.subject.on('mousemove', (e) => {
             const position = e.data.getLocalPosition(this.subject);
             if (mouseIn) {
-                // console.log("mouse move inside", e);
+                // console.log('mouse move inside', e);
                 this.mousePos = position;
                 this.mouseData = e.data;
                 // console.log('mouse move:', this.mousePos);
@@ -36,6 +36,11 @@ export default class MouseHandler {
             } else {
                 this.notify('mousemove', {position});
             }
+        });
+
+        this.subject.on('mousedown', (e) => {
+            const position = e.data.getLocalPosition(this.subject);
+            this.notify('mousedown', {position});
         });
     }
 

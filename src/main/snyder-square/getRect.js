@@ -5,6 +5,17 @@ import {getOrigin} from './types';
 const colors = new Colors();
 const getDefaultBorder = () => ({width: 0, color: colors.black});
 
+/**
+ * Get rect as sprite
+ * @param renderer
+ * @param opts - size, position, border, color
+ */
+export const getRect = (renderer, opts: RectOpts): PIXI.Sprite => {
+    const graphics = getRectGraphics(opts);
+    const texture = renderer.generateTexture(graphics);
+    return getRectSprite({texture, ...opts});
+};
+
 export const getRectSprite = (opts: Rect & {texture: PIXI.Texture} =
                                   {position: getOrigin()}): PIXI.Sprite => {
     const sprite = new PIXI.Sprite(opts.texture);
