@@ -30,7 +30,7 @@ const bgRect = getRectGraphics({position: {x: 0, y: 0}, size: stageSize, border:
 stage.addChild(bgRect);
 const mouseHandler = new MouseHandler(bgRect);
 
-stage.addChild(drawTest(renderer, stageSize));
+// stage.addChild(drawTest(renderer, stageSize));
 
 export type TankUI = {
     container: PIXI.Container,

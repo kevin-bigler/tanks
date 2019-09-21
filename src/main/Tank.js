@@ -53,7 +53,6 @@ export default class Tank {
         // spawn a black 10x10 square, giving it the velocities of that slope, with starting point of the gun tip (?)
         const {x, y} = this.getGunTip();
         const position = {x: x + this.ui.gun.getGlobalPosition().x, y: y + this.ui.gun.getGlobalPosition().y};
-        console.log('gun tip: ', {x, y});
         console.log('position: ', position);
         const bullet = getRect(this.renderer, {
             size: {width: 10, height: 10},
